@@ -211,6 +211,23 @@
       <span class="font-display text-sm text-ink-400 tracking-wide">TOTAL GENERAL</span>
       <span id="cartTotal" class="font-mono text-xl text-amber-500 glow-amber font-bold">$0</span>
     </div>
+    <div class="space-y-2 mb-4">
+
+  <input
+    id="customerName"
+    type="text"
+    placeholder="Nombre y Apellido *"
+    class="w-full bg-carbon-800 border border-carbon-600 rounded-sm px-3 py-2 text-sm text-ink-100"
+  >
+
+  <input
+    id="customerPhone"
+    type="tel"
+    placeholder="Teléfono *"
+    class="w-full bg-carbon-800 border border-carbon-600 rounded-sm px-3 py-2 text-sm text-ink-100"
+  >
+
+</div>
     <button onclick="sendToWhatsApp()" class="w-full bg-amber-500 hover:bg-amber-600 text-carbon-950 font-display font-700 tracking-wide py-3.5 rounded-sm flex items-center justify-center gap-2 text-sm">
       <i class="fa-brands fa-whatsapp text-lg"></i>
       ENVIAR PEDIDO POR WHATSAPP
@@ -705,9 +722,23 @@ function closeCart() {
    DESPACHO A WHATSAPP
 ============================================================================ */
 function sendToWhatsApp() {
+    const nombre = document.getElementById('customerName').value.trim();
+const telefono = document.getElementById('customerPhone').value.trim();
+
+if (!nombre) {
+  alert("Debe ingresar su nombre.");
+  return;
+}
+
+if (!telefono) {
+  alert("Debe ingresar su teléfono.");
+  return;
+}
   if (cart.length === 0) return;
 
   let msg = `*🛒 NUEVO PEDIDO - MULTI-TAC*\n\n`;
+  msg += `*Cliente:* ${nombre}\n`;
+  msg += `*Teléfono:* ${telefono}\n\n`;
   msg += `*Listado de artículos:*\n\n`;
 
   cart.forEach((item, idx) => {
