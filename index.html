@@ -718,6 +718,7 @@ function closeCart() {
   document.getElementById('cartSheet').classList.add('translate-y-full');
   setTimeout(() => document.getElementById('cartBackdrop').classList.add('hidden'), 280);
 }
+
 /* ============================================================================
    DESPACHO A WHATSAPP
 ============================================================================ */
@@ -751,7 +752,6 @@ async function guardarPedido(nombre, telefono) {
   } catch (err) {
 
     console.error("Error al guardar pedido:", err);
-    alert("Error al guardar pedido");
 
   }
 }
@@ -802,6 +802,13 @@ async function sendToWhatsApp() {
 
   window.open(url, "_blank");
 }
+
+/* ============================================================================
+   ARRANQUE
+============================================================================ */
+window.addEventListener("load", () => {
+  init();
+});
 
 </script>
 </body>
