@@ -718,11 +718,12 @@ function closeCart() {
   document.getElementById('cartSheet').classList.add('translate-y-full');
   setTimeout(() => document.getElementById('cartBackdrop').classList.add('hidden'), 280);
 }
-
 /* ============================================================================
    DESPACHO A WHATSAPP
 ============================================================================ */
 async function guardarPedido(nombre, telefono) {
+
+  alert("Entró a guardarPedido");
 
   const detalle = cart.map(item => ({
     sku: item.sku,
@@ -741,6 +742,9 @@ async function guardarPedido(nombre, telefono) {
   };
 
   try {
+
+    console.log("URL:", PEDIDOS_API_URL);
+    console.log("Pedido:", pedido);
 
     await fetch(PEDIDOS_API_URL, {
       method: "POST",
