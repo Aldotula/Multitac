@@ -328,11 +328,14 @@ function waLink(tel){
 
 function inRange(d){
 
+  const now = new Date();
+
   const startToday = new Date(now);
   startToday.setHours(0,0,0,0);
 
-  if(activeRange === "hoy")
+  if(activeRange === "hoy"){
     return d >= startToday;
+  }
 
   if(activeRange === "semana"){
     const sw = new Date(startToday);
