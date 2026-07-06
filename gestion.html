@@ -331,16 +331,16 @@ function inRange(d){
   const startToday = new Date(now);
   startToday.setHours(0,0,0,0);
 
-  if(activeRange==="hoy")
+  if(activeRange === "hoy")
     return d >= startToday;
 
-  if(activeRange==="semana"){
+  if(activeRange === "semana"){
     const sw = new Date(startToday);
     sw.setDate(sw.getDate() - sw.getDay());
     return d >= sw;
   }
 
-  if(activeRange==="mes"){
+  if(activeRange === "mes"){
     const sm = new Date(
       now.getFullYear(),
       now.getMonth(),
@@ -353,8 +353,6 @@ function inRange(d){
 }
 
 function computeStats(){
-
-  const now = new Date();
 
   const startToday = new Date(now);
   startToday.setHours(0,0,0,0);
