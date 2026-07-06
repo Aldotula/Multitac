@@ -393,120 +393,143 @@ function renderDetail(o){
 }
 
 function renderList(){
+
   const list = document.getElementById("order-list");
+
   let filtered = ORDERS.filter(o=>{
-    if(activeState!=="TODOS" && o.estado!==activeState) return false;
+    if(activeState !== "TODOS" && o.estado !== activeState) return false;
     return inRange(new Date(o.fecha));
   });
-  filtered.sort((a,b)=> new Date(b.fecha)-new Date(a.fecha));
+
+  filtered.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+
   list.innerHTML = "";
-  if(filtered.length===0){
-    list.innerHTML = '<p class="empty">No hay pedidos para este filtro.</p>';
+
+  if(filtered.length === 0){
+    list.innerHTML =
+      '<p class="empty">No hay pedidos para este filtro.</p>';
     return;
   }
+
   filtered.forEach(o=>{
+
     const d = new Date(o.fecha);
+
     const card = document.createElement("div");
     card.className = "order-card";
+
     card.innerHTML = `
       <div class="order-head">
+
         <div class="order-top">
           <div>
             <p class="order-name">${o.nombre}</p>
-            <p class="order-meta">${fmtDate(d)} · ${fmtTime(d)} · ...${o.tel.slice(-4)}</p>
+            <p class="order-meta">
+              ${fmtDate(d)} · ${fmtTime(d)} · ...${o.tel.slice(-4)}
+            </p>
           </div>
-          <p class="order-total">${fmtMoney(o.total)}</p>
+
+          <p class="order-total">
+            ${fmtMoney(o.total)}
+          </p>
         </div>
+
         <div class="order-bottom">
-          <span class="badge ${o.estado}">${STATE_LABEL[o.estado]}</span>
+
+          <span class="badge ${o.estado}">
+            ${STATE_LABEL[o.estado]}
+          </span>
+
           <div class="order-actions">
-            <a class="wa-btn" href="${waLink(o.tel)}" target="_blank" rel="noopener" aria-label="Responder por WhatsApp" onclick="event.stopPropagation()">
-              <svg viewBox="0 0 32 32"><path d="M16.04 3C9.37 3 3.98 8.39 3.98 15.06c0 2.28.62 4.42 1.7 6.26L3 29l7.9-2.6a12.02 12.02 0 0 0 5.14 1.16h.01c6.67 0 12.06-5.39 12.06-12.06C28.11 8.39 22.72 3 16.04 3zm0 21.86h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.77 1.25 1.26-3.67-.24-.38a9.86 9.86 0 0 1-1.53-5.4c0-5.47 4.45-9.93 9.93-9.93 2.65 0 5.14 1.04 7.01 2.91a9.86 9.86 0 0 1 2.9 7.02c0 5.47-4.46 9.93-9.94 9.93zm5.44-7.44c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48 1.06 2.87 1.21 3.07c.15.2 2.09 3.2 5.08 4.48.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35z"/></svg>
+
+            waLink(o.tel)}"
+              target="_blank"
+              rel="noopener"
+              onclick="event.stopPropagation()"
+            >
+              <svg viewBox="0 0 32 32">
+                <path d="M16.04 3C9.37 3 3.98 8.39 3.98 15.06c0 2.28.62 4.42 1.7 6.26L3 29l7.9-2.6a12.02 12.02 0 0 0 5.14 1.16h.01c6.67 0 12.06-5.39 12.06-12.06C28.11 8.39 22.72 3 16.04 3zm0 21.86h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.77 1.25 1.26-3.67-.24-.38a9.86 9.86 0 0 1-1.53-5.4c0-5.47 4.45-9.93 9.93-9.93 2.65 0 5.14 1.04 7.01 2.91a9.86 9.86 0 0 1 2.9 7.02c0 5.47-4.46 9.93-9.94 9.93zm5.44-7.44c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48 1.06 2.87 1.21 3.07c.15.2 2.09 3.2 5.08 4.48.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35z"/>
+              </svg>
             </a>
-            <select onclick="event.stopPropagation()" data-id="${o.id}">
-              ${STATE_ORDER.map(s=>`<option value="${s}" ${s===o.estado?"selected":""}>${STATE_LABEL[s]}</option>`).join("")}
+
+            <select
+              onclick="event.stopPropagation()"
+              data-id="${o.id}"
+            >
+              ${STATE_ORDER.map(s=>`
+                <option
+                  value="${s}"
+                  ${s===o.estado ? "selected" : ""}
+                >
+                  ${STATE_LABEL[s]}
+                </option>
+              `).join("")}
             </select>
-            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+
+            <span class="chevron">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </span>
+
           </div>
         </div>
-      </div>`;
-    if(expandedId===o.id){
+
+      </div>
+    `;
+
+    if(expandedId === o.id){
       card.appendChild(renderDetail(o));
       card.querySelector(".chevron").style.transform = "rotate(180deg)";
     }
-    card.querySelector("select").addEventListener("change", async (e)=>{
 
-  const order = ORDERS.find(
-    x => x.id === e.target.getAttribute("data-id")
-  );
+    card.querySelector(".order-head").addEventListener("click",(e)=>{
 
-  const nuevoEstado = e.target.value;
+      if(
+        e.target.closest("select") ||
+        e.target.closest(".wa-btn")
+      ){
+        return;
+      }
 
-  try {
+      expandedId =
+        expandedId === o.id ? null : o.id;
 
-    await fetch(API_URL, {
-  method: "POST",
-  mode: "no-cors",
-  body: JSON.stringify({
-    id: order.id,
-    estado: nuevoEstado
-  })
-});
+      renderList();
 
-
-    order.estado = nuevoEstado;
-
-    await cargarPedidos();
-
-  } catch(error){
-
-    console.error(error);
-    alert("Error actualizando estado");
-
-  }
-
-});
-
-list.appendChild(card);
-
-    card.querySelector("select").addEventListener("change", async (e)=>{
-
-  const order = ORDERS.find(
-    x => x.id === e.target.getAttribute("data-id")
-  );
-
-  const nuevoEstado = e.target.value;
-
-  try {
-
-    await fetch(
-  `${API_URL}?id=${order.id}&estado=${encodeURIComponent(nuevoEstado)}`,
-  {
-    method: "GET",
-    mode: "no-cors"
-  }
-);
-
-    order.estado = nuevoEstado;
-
-    await cargarPedidos();
-
-  } catch(error){
-
-    console.error(error);
-    alert("Error actualizando estado");
-
-  }
-
-});
-``
-    card.querySelector("select").addEventListener("change", (e)=>{
-      const order = ORDERS.find(x=>x.id===e.target.getAttribute("data-id"));
-      order.estado = e.target.value;
-      cargarPedidos(); renderList();
     });
+
+    card.querySelector("select").addEventListener("change", async (e)=>{
+
+      const nuevoEstado = e.target.value;
+
+      try{
+
+        await fetch(
+          `${API_URL}?id=${o.id}&estado=${encodeURIComponent(nuevoEstado)}`,
+          {
+            method: "GET",
+            mode: "no-cors"
+          }
+        );
+
+        setTimeout(()=>{
+          cargarPedidos();
+        },1500);
+
+      }catch(error){
+
+        console.error(error);
+        alert("Error actualizando estado");
+
+      }
+
+    });
+
     list.appendChild(card);
+
   });
+
 }
 
 function renderTopClientes(){
