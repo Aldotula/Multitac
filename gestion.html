@@ -286,10 +286,10 @@ async function cargarPedidos() {
       productos = [];
 
     }
-
+    console.log("FECHA RAW:", r.c[1]?.v);
     return {
       id: String(r.c[0]?.v || ""),
-      fecha: r.c[1]?.v,
+      fecha: String(r.c[1]?.v || ""),
       nombre: r.c[2]?.v || "",
       tel: String(r.c[3]?.v || ""),
       total: Number(r.c[4]?.v || 0),
@@ -297,6 +297,7 @@ async function cargarPedidos() {
       obs: r.c[6]?.v || "",
       prod: productos
     };
+    
 
   });
 
