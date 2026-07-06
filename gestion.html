@@ -289,7 +289,7 @@ async function cargarPedidos() {
 
     return {
       id: String(r.c[0]?.v || ""),
-      fecha: r.c[1]?.f || r.c[1]?.v || "",
+      fecha: r.c[1]?.v,
       nombre: r.c[2]?.v || "",
       tel: String(r.c[3]?.v || ""),
       total: Number(r.c[4]?.v || 0),
@@ -314,7 +314,6 @@ const STATE_LABEL = {REALIZADO:"Realizado",PAGADO:"Pagado",ENVIADO:"Enviado",ENT
 let activeState = "TODOS";
 let activeRange = "hoy";
 let expandedId = null;
-const NOW = new Date();
 
 function fmtMoney(n){ return "$" + Math.round(n).toLocaleString("es-AR"); }
 function fmtTime(d){ return d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"}); }
@@ -328,28 +327,74 @@ function waLink(tel){
 }
 
 function inRange(d){
-  const startToday = new Date(NOW); startToday.setHours(0,0,0,0);
-  if(activeRange==="hoy") return d>=startToday;
-  if(activeRange==="semana"){ const sw=new Date(startToday); sw.setDate(sw.getDate()-sw.getDay()); return d>=sw; }
-  if(activeRange==="mes"){ const sm=new Date(NOW.getFullYear(),NOW.getMonth(),1); return d>=sm; }
+
+  const startToday = new Date(now);
+  startToday.setHours(0,0,0,0);
+
+  if(activeRange==="hoy")
+    return d >= startToday;
+
+  if(activeRange==="semana"){
+    const sw = new Date(startToday);
+    sw.setDate(sw.getDate() - sw.getDay());
+    return d >= sw;
+  }
+
+  if(activeRange==="mes"){
+    const sm = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+    return d >= sm;
+  }
+
   return true;
 }
 
 function computeStats(){
-  const startToday = new Date(NOW); startToday.setHours(0,0,0,0);
-  const sw=new Date(startToday); sw.setDate(sw.getDate()-sw.getDay());
-  const sm=new Date(NOW.getFullYear(),NOW.getMonth(),1);
-  let hoy=0,semana=0,mes=0;
-  ORDERS.forEach(o=>{
-    if(o.estado==="CANCELADO") return;
-    const d=new Date(o.fecha);
-    if(d>=startToday) hoy+=o.total;
-    if(d>=sw) semana+=o.total;
-    if(d>=sm) mes+=o.total;
+
+  const now = new Date();
+
+  const startToday = new Date(now);
+  startToday.setHours(0,0,0,0);
+
+  const sw = new Date(startToday);
+  sw.setDate(sw.getDate() - sw.getDay());
+
+  const sm = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  );
+
+  let hoy = 0;
+  let semana = 0;
+  let mes = 0;
+
+  ORDERS.forEach(o => {
+
+    if(o.estado === "CANCELADO") return;
+
+    const d = new Date(o.fecha);
+
+    if(d >= startToday) hoy += o.total;
+
+    if(d >= sw) semana += o.total;
+
+    if(d >= sm) mes += o.total;
+
   });
-  document.getElementById("stat-hoy").textContent = fmtMoney(hoy);
-  document.getElementById("stat-semana").textContent = fmtMoney(semana);
-  document.getElementById("stat-mes").textContent = fmtMoney(mes);
+
+  document.getElementById("stat-hoy").textContent =
+    fmtMoney(hoy);
+
+  document.getElementById("stat-semana").textContent =
+    fmtMoney(semana);
+
+  document.getElementById("stat-mes").textContent =
+    fmtMoney(mes);
+
 }
 
 function computeCounts(){
