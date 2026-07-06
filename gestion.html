@@ -310,6 +310,9 @@ if (m) {
     Number(m[6])
   );
 }
+console.log("Fecha hoja:", fechaRaw);
+console.log("Fecha JS:", fechaPedido);
+console.log("Hora mostrada:", fmtTime(fechaPedido));
     return {
   id: String(r.c[0]?.v || ""),
   fecha: fechaPedido,
@@ -340,8 +343,27 @@ let activeRange = "hoy";
 let expandedId = null;
 
 function fmtMoney(n){ return "$" + Math.round(n).toLocaleString("es-AR"); }
-function fmtTime(d){ return d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"}); }
-function fmtDate(d){ return d.toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit"}); }
+function fmtTime(d){
+  return d.toLocaleTimeString(
+    "es-AR",
+    {
+      timeZone: "America/Argentina/Buenos_Aires",
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
+}
+
+function fmtDate(d){
+  return d.toLocaleDateString(
+    "es-AR",
+    {
+      timeZone: "America/Argentina/Buenos_Aires",
+      day: "2-digit",
+      month: "2-digit"
+    }
+  );
+}
 
 function waLink(tel){
   let digits = tel.replace(/\D/g,"");
