@@ -452,6 +452,11 @@ function renderList(){
 
   try{
 
+console.log("ID:", order.id);
+console.log("ESTADO:", nuevoEstado);
+console.log(
+  `${API_URL}?id=${order.id}&estado=${encodeURIComponent(nuevoEstado)}`
+);
     await fetch(
       `${API_URL}?id=${order.id}&estado=${encodeURIComponent(nuevoEstado)}`,
       {
