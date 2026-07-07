@@ -174,11 +174,14 @@ window.OneSignalDeferred = window.OneSignalDeferred || [];
 
 OneSignalDeferred.push(async function(OneSignal) {
 
-  await OneSignal.init({
+await OneSignal.init({
   appId: "b5d404fd-61f5-4991-8e5b-6b9b23e6e86c",
 
   serviceWorkerPath:
-    "/multitac-catalogo/OneSignalSDKWorker.js",
+    "OneSignalSDKWorker.js",
+
+  serviceWorkerUpdaterPath:
+    "OneSignalSDKUpdaterWorker.js",
 
   notifyButton: {
     enable: true
