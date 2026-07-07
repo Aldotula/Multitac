@@ -172,39 +172,25 @@
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 
-OneSignalDeferred.push(async function(OneSignal) {
+OneSignalDeferred.push(async function (OneSignal) {
 
-await OneSignal.init({
-  appId: "b5d404fd-61f5-4991-8e5b-6b9b23e6e86c",
+  await OneSignal.init({
+    appId: "b5d404fd-61f5-4991-8e5b-6b9b23e6e86c",
 
-  serviceWorkerPath:
-    "OneSignalSDKWorker.js",
+    serviceWorkerPath: "OneSignalSDKWorker.js",
 
-  serviceWorkerUpdaterPath:
-    "OneSignalSDKUpdaterWorker.js",
+    serviceWorkerUpdaterPath: "OneSignalSDKUpdaterWorker.js",
 
-  notifyButton: {
-    enable: true
-  }
-});
+    notifyButton: {
+      enable: true
+    }
+  });
 
-  try {
-
-    await OneSignal.User.addTag(
-      "rol",
-      "admin"
-    );
-
-    console.log("✅ Admin registrado en OneSignal");
-
-  } catch(error) {
-
-    console.error(error);
-
-  }
+  console.log("✅ ONESIGNAL OK");
 
 });
 </script>
+
 <script>
 console.log("VERSION TEST MULTITAC");
 </script>
