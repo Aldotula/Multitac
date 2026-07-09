@@ -393,17 +393,14 @@ async function procesarTrackQueue() {
 
 function trackEvent(params) {
 
-  console.log(
-    "TRACK ENVIADO:",
-    params
-  );
-
   try {
 
     const query = new URLSearchParams({
       accion: "track",
-      sid: getSessionId(),
-      ...params
+      evt: params.evt || "",
+      sku: params.sku || "",
+      prod: params.prod || "",
+      seg: params.seg || ""
     }).toString();
 
     trackQueue.push(
@@ -414,12 +411,10 @@ function trackEvent(params) {
 
   } catch (err) {
 
-    console.warn(
-      "No se pudo registrar evento:",
-      err
-    );
+    console.warn(err);
 
   }
+
 }
 
 
