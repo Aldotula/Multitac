@@ -397,10 +397,8 @@ function trackEvent(params) {
 
     const query = new URLSearchParams({
       accion: "track",
-      evt: params.evt || "",
-      sku: params.sku || "",
-      prod: params.prod || "",
-      seg: params.seg || ""
+      sid: getSessionId(),
+      ...params
     }).toString();
 
     trackQueue.push(
@@ -411,56 +409,13 @@ function trackEvent(params) {
 
   } catch (err) {
 
-    console.warn(err);
+    console.warn(
+      "Error tracking:",
+      err
+    );
 
   }
 
-}
-
-
-let sessionStartTime = Date.now();
-
-async function initTracking() {
-  let geo = { pais: "", prov: "", ciudad: "" };
-
-  try {
-    const res = await fetch("https://ipwho.is/");
-    const data = await res.json();
-    if (data && data.success !== false) {
-      geo = {
-        pais: data.country || "",
-        prov: data.region || "",
-        ciudad: data.city || ""
-      };
-    }
-  } catch (err) {
-    console.warn("No se pudo geolocalizar la visita:", err);
-  }
-
-  const dispositivo = /Mobi|Android/i.test(navigator.userAgent) ? "MOBILE" : "DESKTOP";
-
-  trackEvent({
-    evt: "visita",
-    pais: geo.pais,
-    prov: geo.prov,
-    ciudad: geo.ciudad,
-    ref: document.referrer || "directo",
-    dev: dispositivo
-  });
-
-  // Heartbeat de duracion cada 20s mientras la pagina sigue abierta
-  setInterval(() => {
-    const seg = Math.round((Date.now() - sessionStartTime) / 1000);
-    trackEvent({ evt: "duracion", seg });
-  }, 20000);
-
-  // Ultimo heartbeat al salir de la pagina (mejor esfuerzo, no siempre dispara en mobile)
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-      const seg = Math.round((Date.now() - sessionStartTime) / 1000);
-      trackEvent({ evt: "duracion", seg });
-    }
-  });
 }
 
 // Registra cada SKU visto una sola vez por sesion
