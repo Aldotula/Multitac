@@ -362,14 +362,16 @@ async function procesarTrackQueue() {
 
     try {
 
-  const img = new Image();
-  img.src = url;
+      await fetch(url, {
+        method: "GET",
+        mode: "no-cors"
+      });
 
-} catch (err) {
+    } catch (err) {
 
-  console.warn("Error tracking:", err);
+      console.warn("Error tracking:", err);
 
-}
+    }
 
     await new Promise(resolve =>
       setTimeout(resolve, 500)
