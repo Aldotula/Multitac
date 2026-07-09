@@ -317,12 +317,13 @@ async function cargarProductos(){
 
   PRODUCTOS_MAP = {};
   rows.forEach(r => {
-    const sku = r.c[0]?.v; // columna A = SKU
+    const sku = r.c[0]?.v;
     if(!sku) return;
     PRODUCTOS_MAP[sku] = {
-      imagen: r.c[7]?.v || "",    // columna H = Imagen
-      proveedor: r.c[9]?.v || ""  // columna J = Proveedor
-    };
+  imagen: r.c[7]?.v || "",
+  proveedor: r.c[9]?.v || "",
+  costo: Number(r.c[4]?.v || 0)
+};
   });
 }
 
@@ -344,23 +345,26 @@ async function cargarPedidos() {
     try {
 
       productos = JSON.parse(
-        r.c[7]?.v || "[]"
-      ).map(p => ({
-        sku: p.sku || "",
-        n: p.producto || "",
-        c: Number(p.cantidad || 0),
-        p: Number(p.precio || 0),
-        img: p.imagen || "",
-        prov: p.proveedor || ""
-      })).map(p => {
-        const info = PRODUCTOS_MAP[p.sku] || {};
-        return {
-          ...p,
-          img: p.img || info.imagen,
-          prov: p.prov || info.proveedor
-        };
-      });
+  r.c[7]?.v || "[]"
+).map(p => ({
+  sku: p.sku || "",
+  n: p.producto || "",
+  c: Number(p.cantidad || 0),
+  p: Number(p.precio || 0),
+  img: p.imagen || "",
+  prov: p.proveedor || ""
+})).map(p => {
 
+  const info = PRODUCTOS_MAP[p.sku] || {};
+
+  return {
+    ...p,
+    img: p.img || info.imagen,
+    prov: p.prov || info.proveedor,
+    costo: Number(info.costo || 0)
+  };
+
+});
     } catch {
 
       productos = [];
@@ -584,9 +588,21 @@ function renderDetail(o){
   });
 
   const sum = o.prod.reduce(
-    (a,p)=>a+p.c*p.p,
-    0
-  );
+  (a,p)=>a+p.c*p.p,
+  0
+);
+
+const costoTotal = o.prod.reduce(
+  (a,p)=>a + (p.c * (p.costo || 0)),
+  0
+);
+
+const gananciaNeta = sum - costoTotal;
+
+const porcentajeGanancia =
+  costoTotal > 0
+    ? ((gananciaNeta / costoTotal) * 100).toFixed(1)
+    : 0;
 
   wrap.innerHTML = `
 
@@ -610,9 +626,28 @@ function renderDetail(o){
     </table>
 
     <div class="detail-total">
-      <span>Total</span>
-      <span>${fmtMoney(sum)}</span>
-    </div>
+  <span>Total Venta</span>
+  <span>${fmtMoney(sum)}</span>
+</div>
+
+<div class="detail-total">
+  <span>Costo</span>
+  <span>${fmtMoney(costoTotal)}</span>
+</div>
+
+<div class="detail-total">
+  <span>% Ganancia</span>
+  <span style="color:#D9A62E">
+    ${porcentajeGanancia}%
+  </span>
+</div>
+
+<div class="detail-total">
+  <span>Ganancia Neta</span>
+  <span style="color:#7cc142;font-weight:700">
+    ${fmtMoney(gananciaNeta)}
+  </span>
+</div>
 
     ${
       o.obs
