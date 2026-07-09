@@ -448,17 +448,38 @@ async function initTracking() {
     ciudad: ""
   };
 
-  console.log("INIT TRACKING");
+  try {
+
+    const res = await fetch("https://ipwho.is/");
+    const data = await res.json();
+
+    if (data && data.success !== false) {
+
+      geo = {
+        pais: data.country || "",
+        prov: data.region || "",
+        ciudad: data.city || ""
+      };
+
+    }
+
+  } catch (err) {
+
+    console.warn(err);
+
+  }
+
+  console.log("GEO:", geo);
 
   setTimeout(() => {
 
     console.log("ENVIANDO VISITA");
 
     trackEvent({
-  evt: "visita",
-  pais: geo.pais,
-  prov: geo.prov
-});
+      evt: "visita",
+      pais: geo.pais,
+      prov: geo.prov
+    });
 
   }, 3000);
 
