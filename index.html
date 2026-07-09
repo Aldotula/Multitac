@@ -464,28 +464,34 @@ function trackProductoVisto(sku, nombre) {
 // cuando realmente entran en el viewport (no solo por estar en el DOM)
 let viewObserver = null;
 function setupViewObserver() {
+
   if (viewObserver) viewObserver.disconnect();
+
   viewObserver = new IntersectionObserver((entries) => {
+
     entries.forEach(entry => {
+
       if (entry.isIntersecting) {
 
-  const sku = entry.target.getAttribute("data-sku");
-  const nombre = entry.target.getAttribute("data-name");
+        const sku = entry.target.getAttribute("data-sku");
+        const nombre = entry.target.getAttribute("data-name");
 
-  trackProductoVisto(
-    sku,
-    nombre
-  );
+        trackProductoVisto(sku, nombre);
 
-  viewObserver.unobserve(
-    entry.target
-  );
+        viewObserver.unobserve(entry.target);
 
-}
+      }
+
     });
-  }, { threshold: 0.5 });
 
-  document.querySelectorAll("[data-sku]").forEach(el => viewObserver.observe(el));
+  }, {
+    threshold: 0.5
+  });
+
+  document
+    .querySelectorAll("[data-sku]")
+    .forEach(el => viewObserver.observe(el));
+
 }
 
 /* ============================================================================
