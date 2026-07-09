@@ -749,13 +749,13 @@ function renderList(){
 
   if (!confirmar) return;
 
-  await fetch(
-    `${API_URL}?accion=eliminar&id=${o.id}`,
-    {
-      method: "GET",
-      mode: "no-cors"
-    }
-  );
+  const r = await fetch(
+  `${API_URL}?accion=eliminar&id=${o.id}`
+);
+
+const txt = await r.text();
+
+alert(txt);
 
   ORDERS = ORDERS.filter(
     x => x.id !== o.id
