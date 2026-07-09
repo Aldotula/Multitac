@@ -360,17 +360,15 @@ async function procesarTrackQueue() {
 
     const url = trackQueue.shift();
 
-    window.lastTrackUrl = url;
-
-    console.log(
-      "URL TRACK COMPLETA:\n" + url
-    );
-
     try {
 
-      const img = new Image();
+      await fetch(url, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-store"
+      });
 
-      img.src = url;
+      console.log("TRACK ENVIADO");
 
     } catch (err) {
 
@@ -382,7 +380,7 @@ async function procesarTrackQueue() {
     }
 
     await new Promise(resolve =>
-      setTimeout(resolve, 500)
+      setTimeout(resolve, 1000)
     );
 
   }
