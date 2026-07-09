@@ -194,45 +194,20 @@ unificados["Subcategoria"] = unificados["Producto"].apply(
 )
 
 # ======================
-# APLICAR GANANCIA POR TRAMOS
+# APLICAR GANANCIA POR PORCENTAJE
 # ======================
 
-def calcular_suma(precio):
+def calcular_precio_reventa(precio):
 
-    if precio < 5000:
-        return 3000
-
-    elif precio < 10000:
-        return 4000
-
-    elif precio < 20000:
-        return 5000
-
-    elif precio < 30000:
-        return 7000
-
-    elif precio < 50000:
-        return 11000
-
-    elif precio < 70000:
-        return 14000
-
-    elif precio < 80000:
-        return 16000
-
-    elif precio < 90000:
-        return 17000
-
-    elif precio < 200000:
-        return 20000
+    if precio < 30000:
+        return round(precio * 1.55)
 
     else:
-        return 40000
-
+        return round(precio * 1.30)
 
 unificados["PrecioReventa"] = (
     unificados["PrecioProveedor"]
-    + unificados["PrecioProveedor"].apply(calcular_suma)
+    .apply(calcular_precio_reventa)
 )
 
 unificados["%Ganancia"] = (
@@ -302,4 +277,5 @@ sin_subcategoria = (
 print(
     f"✅ Productos sin subcategoría: {sin_subcategoria}"
 )
-print("VERSION NUEVA SUBCATEGORIAS - TRAMOS AJUSTADOS V2")
+
+print("VERSION NUEVA SUBCATEGORIAS - MARGEN 55% HASTA 30000 Y 30% SUPERIOR")
